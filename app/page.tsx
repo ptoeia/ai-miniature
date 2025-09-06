@@ -2,9 +2,9 @@ import HomeClientContent from '@/components/home/HomeClientContent';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'AI Miniature Generator - Transform Photos into Miniature Scenes',
-  description: 'Create stunning miniature tilt-shift effects from your photos. Professional AI-powered depth of field, toy-world aesthetics, and cinematic color grading in seconds.',
-  keywords: 'AI miniature generator, tilt-shift effect, miniature photography, photo transformation, toy world effect, depth of field, AI photo editing',
+  title: 'AI Miniature Generator',
+  description: 'Create stunning miniature tilt-shift effects from your photos. Professional AI-powered depth of field, toy-world aesthetics in seconds.',
+  keywords: '',
   openGraph: {
     title: 'AI Miniature Generator - Transform Photos into Miniature Scenes',
     description: 'Create stunning miniature tilt-shift effects from your photos. Professional AI-powered depth of field, toy-world aesthetics, and cinematic color grading in seconds.',

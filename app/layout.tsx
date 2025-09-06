@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     template: '%s | AI Miniature',
     default: 'AI Miniature - AI Miniature Generator',
   },
-  description: 'Transform your photos into stunning miniature scenes with AI-powered tilt-shift effects. Create toy-world aesthetics with professional depth of field and cinematic color grading.',
-  keywords: 'AI miniature, tilt-shift, miniature photography, AI photo effects, toy world, depth of field, photo transformation',
+  description: 'Transform your photos into stunning miniature scenes with AI-powered tilt-shift effects. Create toy-world aesthetics with  depth of field.',
+  keywords: '',
   alternates: {
     canonical: 'https://aiminiature.net',
   },
