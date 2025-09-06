@@ -1,0 +1,249 @@
+# Flux Kontext Development Rules
+
+## 🌐 Language & Communication
+1. **Always use English in code files** - All code, comments, variable names, and documentation must be in English
+2. **Chinese comments allowed only for business logic explanations** - When explaining complex business requirements
+3. **Consistent naming conventions** - Use descriptive, self-documenting names
+
+## 🏗️ Code Quality & Architecture
+
+### SOLID Principles
+1. **Single Responsibility Principle** - Each component/function should have one clear purpose
+2. **Open/Closed Principle** - Components should be open for extension, closed for modification
+3. **Liskov Substitution Principle** - Derived components should be substitutable for their base types
+4. **Interface Segregation** - Create specific interfaces rather than large, monolithic ones
+5. **Dependency Inversion** - Depend on abstractions, not concretions
+
+### Component Architecture
+1. **Component-based design** - Break down UI into reusable, composable components
+2. **Separation of concerns** - Separate business logic, UI logic, and presentation
+3. **Props interface definition** - Always define TypeScript interfaces for component props
+4. **Component documentation** - Include JSDoc comments for complex components
+
+## 📁 Project Structure
+
+### Directory Organization
+```
+components/
+├── ui/           # Reusable UI components (shadcn/ui)
+├── auth/         # Authentication related components
+├── home/         # Home page specific components
+├── navigation/   # Navigation components
+├── layout/       # Layout components
+├── pricing/      # Pricing related components
+└── creem/        # Creem payment integration components
+
+lib/
+├── data/         # Static data and constants
+├── schemas/      # Zod validation schemas
+└── utils/        # Utility functions
+
+app/              # Next.js App Router pages
+types/            # TypeScript type definitions
+```
+
+### File Naming Conventions
+1. **Components**: PascalCase (e.g., `ImageComparison.tsx`)
+2. **Utilities**: camelCase (e.g., `formatDate.ts`)
+3. **Types**: PascalCase with descriptive names (e.g., `UserProfile.ts`)
+4. **Constants**: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS.ts`)
+
+## ⚛️ React & Next.js Patterns
+
+### Component Structure
+```typescript
+'use client'; // Only when needed for client components
+
+import React from 'react';
+import { ComponentProps } from './types';
+
+/**
+ * Component description
+ * @param props - Component props
+ */
+export default function ComponentName({ 
+  prop1, 
+  prop2,
+  className = '',
+  ...props 
+}: ComponentProps) {
+  // Component logic here
+  
+  return (
+    <div className={cn('base-classes', className)} {...props}>
+      {/* Component JSX */}
+    </div>
+  );
+}
+```
+
+### Hooks Usage
+1. **Custom hooks** - Extract reusable logic into custom hooks
+2. **Hook order** - Follow React hooks rules consistently
+3. **Dependency arrays** - Always specify dependencies for useEffect, useMemo, useCallback
+
+### State Management
+1. **Local state first** - Use useState for component-specific state
+2. **Form handling** - Use react-hook-form with Zod validation
+3. **Global state** - Use Context API or external state management when needed
+
+## 🎨 Styling & Design System
+
+### Tailwind CSS Guidelines
+1. **Utility-first approach** - Use Tailwind utilities over custom CSS
+2. **Responsive design** - Mobile-first responsive design with breakpoint prefixes
+3. **Design tokens** - Use CSS custom properties defined in globals.css
+4. **Component variants** - Use class-variance-authority for component variants
+
+### Color System
+```typescript
+// Use semantic color tokens
+'text-foreground'     // Primary text
+'text-muted-foreground' // Secondary text
+'bg-background'       // Primary background
+'bg-card'            // Card backgrounds
+'border-border'      // Border colors
+```
+
+### Typography
+1. **Font families**: 
+   - `font-poppins` for headings
+   - `font-roboto` for body text
+2. **Consistent sizing** - Use Tailwind's text size scale
+3. **Line height** - Maintain proper line heights for readability
+
+## 🔧 Technical Standards
+
+### TypeScript
+1. **Strict mode enabled** - Use strict TypeScript configuration
+2. **Type definitions** - Define interfaces for all data structures
+3. **Generic types** - Use generics for reusable components
+4. **Avoid any** - Use proper typing instead of `any`
+
+### Error Handling
+1. **Try-catch blocks** - Wrap async operations in try-catch
+2. **Error boundaries** - Implement React error boundaries for UI errors
+3. **User feedback** - Provide meaningful error messages to users
+4. **Logging** - Use console.error for development, proper logging for production
+
+### Performance
+1. **Code splitting** - Use dynamic imports for large components
+2. **Image optimization** - Use Next.js Image component with proper sizing
+3. **Bundle analysis** - Regular bundle size monitoring
+4. **Lazy loading** - Implement lazy loading for non-critical components
+
+## 🔐 Security & Authentication
+
+### Supabase Integration
+1. **Row Level Security** - Implement RLS policies for data access
+2. **Client-side auth** - Use Supabase auth helpers for Next.js
+3. **Protected routes** - Implement route protection for authenticated pages
+4. **Session management** - Proper session handling and refresh
+
+### Data Validation
+1. **Input validation** - Use Zod schemas for all form inputs
+2. **API validation** - Validate all API inputs and outputs
+3. **Sanitization** - Sanitize user inputs before processing
+
+## 💳 Payment Integration (Creem)
+
+### Creem SDK Usage
+1. **Documentation reference** - Follow https://docs.creem.io/learn/
+2. **Error handling** - Implement proper error handling for payment flows
+3. **Webhook security** - Verify webhook signatures
+4. **Credit system** - Implement credit-based usage tracking
+
+## 🧪 Testing & Quality Assurance
+
+### Code Quality
+1. **ESLint compliance** - Follow ESLint rules without exceptions
+2. **Prettier formatting** - Consistent code formatting
+3. **Type checking** - Regular TypeScript compilation checks
+4. **Code reviews** - Peer review for all changes
+
+### Testing Strategy
+1. **Component testing** - Test component behavior and props
+2. **Integration testing** - Test component interactions
+3. **API testing** - Test API endpoints and error scenarios
+4. **E2E testing** - Critical user flows testing
+
+## 📱 Responsive Design
+
+### Breakpoint Strategy
+```css
+sm: 640px   /* Small devices */
+md: 768px   /* Medium devices */
+lg: 1024px  /* Large devices */
+xl: 1280px  /* Extra large devices */
+2xl: 1536px /* 2X large devices */
+```
+
+### Mobile-First Approach
+1. **Base styles** - Design for mobile first
+2. **Progressive enhancement** - Add complexity for larger screens
+3. **Touch targets** - Ensure adequate touch target sizes
+4. **Performance** - Optimize for mobile performance
+
+## 🚀 Deployment & Environment
+
+### Environment Management
+1. **Environment variables** - Use .env files for configuration
+2. **Build optimization** - Optimize builds for production
+3. **Static generation** - Use SSG where possible for performance
+4. **Edge functions** - Utilize edge functions for global performance
+
+### Version Control
+1. **Commit messages** - Use conventional commit format
+2. **Branch naming** - Use descriptive branch names
+3. **Pull requests** - Require PR reviews for main branch
+4. **Changelog** - Maintain changelog for releases
+
+## 🔄 MCP Interactive Feedback Rules
+
+### Feedback Loop Requirements
+1. **Continuous feedback** - Call MCP mcp-feedback-enhanced during all processes
+2. **User input integration** - Adjust behavior based on user feedback
+3. **Completion confirmation** - Only stop when user explicitly indicates "end"
+4. **Pre-completion feedback** - Always ask for feedback before task completion
+
+### Implementation Guidelines
+1. **Feedback integration** - Incorporate feedback into development decisions
+2. **Iterative improvement** - Use feedback for continuous improvement
+3. **User-centric approach** - Prioritize user needs and preferences
+4. **Documentation updates** - Update rules based on feedback patterns
+
+## 📋 Code Review Checklist
+
+### Before Submitting
+- [ ] TypeScript compilation passes
+- [ ] ESLint rules followed
+- [ ] Component props properly typed
+- [ ] Responsive design implemented
+- [ ] Error handling implemented
+- [ ] Performance considerations addressed
+- [ ] Accessibility standards met
+- [ ] Documentation updated
+
+### Review Criteria
+- [ ] Code follows SOLID principles
+- [ ] Component architecture is sound
+- [ ] Styling follows design system
+- [ ] Security best practices followed
+- [ ] Performance optimizations applied
+- [ ] Test coverage adequate
+- [ ] Documentation complete
+
+## 🎯 Best Practices Summary
+
+1. **Maintainability** - Write code that's easy to understand and modify
+2. **Scalability** - Design components and systems that can grow
+3. **Performance** - Optimize for speed and efficiency
+4. **Accessibility** - Ensure inclusive design for all users
+5. **Security** - Implement security best practices throughout
+6. **User Experience** - Prioritize smooth, intuitive user interactions
+7. **Documentation** - Maintain clear, up-to-date documentation
+8. **Testing** - Ensure reliability through comprehensive testing
+
+---
+
+*These rules should be followed consistently across the Flux Kontext project to maintain code quality, performance, and maintainability.* 

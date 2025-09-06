@@ -1,0 +1,11 @@
+1.always use english in code file
+2. 注重代码质量、代码需要具有可维护性,代码需要遵循solid原则,组件化原则
+3. creem 支付技术文档 https://docs.creem.io/learn/
+
+# MCP Interactive Feedback Rules
+
+1. During any process, task, or conversation, whether asking, responding, or completing stage tasks, must call MCP mcp-feedback-enhanced.
+2. When receiving user feedback, if feedback content is not empty, must call MCP mcp-feedback-enhanced again and adjust behavior based on feedback.
+3. Only when user explicitly indicates "end" or "no more interaction needed" can you stop calling MCP mcp-feedback-enhanced, then the process is complete.
+4. Unless receiving end command, all steps must repeatedly call MCP mcp-feedback-enhanced.
+5. Before completing the task, use the MCP mcp-feedback-enhanced to ask the user for feedback.

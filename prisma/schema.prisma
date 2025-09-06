@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Model for Creem integration (example, keep if used)
+model CreemProduct {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  currency    String  @default("USD")
+  creemId     String  @unique // Creem's internal product ID
+  active      Boolean @default(true)
+
+  subscriptions    Subscription[]
+  oneTimePurchases OneTimePurchase[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// New Profile model linked to Supabase Auth users
+model Profile {
+  id        String   @id // This will be the Supabase auth.users.id (UUID)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  email     String?  @unique // Can store email here, synced from auth.users
+  fullName  String?  // Example: Store user's full name
+  avatarUrl String?  // Example: Store avatar URL
+
+  subscriptions    Subscription[]
+  oneTimePurchases OneTimePurchase[]
+
+  // Add other application-specific fields here, e.g.:
+  // imageProcessingCredits Int @default(10)
+  // apiKey                 String? @unique @default(cuid()) // If users get API keys for your tool
+
+  @@map("profiles") // Explicitly map to "profiles" table in public schema
+}
+
+model Subscription {
+  id                 String       @id @default(cuid())
+  profileId          String // Changed from userId to profileId
+  profile            Profile      @relation(fields: [profileId], references: [id]) // Changed from User to Profile
+  creemProductId     String
+  creemProduct       CreemProduct @relation(fields: [creemProductId], references: [id])
+  status             String       // e.g., active, canceled, past_due
+  creemSubscriptionId String       @unique // Creem's internal subscription ID
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd  Boolean      @default(false)
+  canceledAt         DateTime?
+  endedAt            DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscription")
+}
+
+model OneTimePurchase {
+  id             String       @id @default(cuid())
+  profileId      String // Changed from userId to profileId
+  profile        Profile      @relation(fields: [profileId], references: [id]) // Changed from User to Profile
+  creemProductId String
+  creemProduct   CreemProduct @relation(fields: [creemProductId], references: [id])
+  status         String       // e.g., pending, succeeded, failed
+  creemPaymentIntentId String   @unique // Creem's internal payment intent ID
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("onetimepurchase")
+}
