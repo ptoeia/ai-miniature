@@ -20,13 +20,13 @@ const poppins = Poppins({
 // Global Metadata
 export const metadata: Metadata = {
   title: {
-    template: '%s | Banana AI',
-    default: 'Banana AI - AI Image Editing Reimagined',
+    template: '%s | AI Miniature',
+    default: 'AI Miniature - AI Miniature Generator',
   },
-  description: 'Banana AI - powered by Google Nano Banan AI, is a AI image editing tool designed to simplify enhance photos, remove backgrounds, restore old images, and much more.',
-  keywords: '',
+  description: 'Transform your photos into stunning miniature scenes with AI-powered tilt-shift effects. Create toy-world aesthetics with professional depth of field and cinematic color grading.',
+  keywords: 'AI miniature, tilt-shift, miniature photography, AI photo effects, toy world, depth of field, photo transformation',
   alternates: {
-    canonical: 'https://banana-ai.art',
+    canonical: 'https://aiminiature.net',
   },
 };
 
