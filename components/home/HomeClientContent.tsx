@@ -95,10 +95,9 @@ const HomeClientContent: NextPage = () => {
 
   // Sample images for default showcase rotation (when no generated image)
   const sampleImages = useMemo(() => [
-    '/baseball-hat-on-model.png',
-    '/colleimage.jpg',
-    '/change-hair-color.webp',
-    '/merge.jpg'
+    '/motor/moto2.png',
+    '/motor/motor-miniature-5.webp',
+    '/motor/motor-miniature-7.webp'
   ], []);
 
   // Reset selected quick prompt when switching tabs
