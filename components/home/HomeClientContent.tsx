@@ -141,6 +141,25 @@ const HomeClientContent: NextPage = () => {
     // 清除之前的认证错误
     setAuthError('');
     
+    // Validate required fields based on active tab
+    if (activeTab === 'image_to_image') {
+      // For image-to-image, both image and prompt are required
+      if (uploadedUrls.length === 0 && stagedFiles.length === 0) {
+        setAuthError('Please upload an image first.');
+        return;
+      }
+      if (!data.prompt.trim()) {
+        setAuthError('Please enter a prompt to describe the transformation.');
+        return;
+      }
+    } else {
+      // For text-to-image, only prompt is required
+      if (!data.prompt.trim()) {
+        setAuthError('Please enter a prompt to generate an image.');
+        return;
+      }
+    }
+    
     // Check if user is authenticated
     if (!user) {
       setShowLoginModal(true);
@@ -550,13 +569,7 @@ const HomeClientContent: NextPage = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={
-                        isGenerating || isUploading || (
-                          activeTab === 'image_to_image' && (
-                            (user ? uploadedUrls.length === 0 : stagedFiles.length === 0)
-                          )
-                        )
-                      }
+                      disabled={isGenerating || isUploading}
                       className={`font-roboto flex-grow px-6 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-blue-500/20 
                         ${isGenerating 
                           ? 'bg-gray-500 cursor-not-allowed'
