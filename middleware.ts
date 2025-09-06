@@ -2,12 +2,19 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+  try {
+    const response = NextResponse.next();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+    // Check if required env vars are available
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Missing Supabase environment variables');
+      return response;
+    }
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value;
@@ -44,60 +51,65 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
 
-  // Define protected and public routes
-  const { pathname } = request.nextUrl;
+    // Define protected and public routes
+    const { pathname } = request.nextUrl;
 
-  // Public API routes (no auth). Callback should not be protected.
-  const publicApiRoutes = [
-    '/api/generate/kie/callback',
-  ];
+    // Public API routes (no auth). Callback should not be protected.
+    const publicApiRoutes = [
+      '/api/generate/kie/callback',
+    ];
 
-  const protectedRoutes = ['/dashboard']; // Add any other routes that need protection
-  const authRoutes = ['/signin', '/signup']; // Add any routes related to auth flow (e.g. /forgot-password)
-  const protectedApiRoutes = [
-    '/api/generate', 
-    '/api/account',
-    '/api/checkout',
-    '/api/customerPortal',
-    '/api/user/credits',
-    '/api/user/claim-free-trial'
-  ]; // API routes that require auth
+    const protectedRoutes = ['/dashboard']; // Add any other routes that need protection
+    const authRoutes = ['/signin', '/signup']; // Add any routes related to auth flow (e.g. /forgot-password)
+    const protectedApiRoutes = [
+      '/api/generate', 
+      '/api/account',
+      '/api/checkout',
+      '/api/customerPortal',
+      '/api/user/credits',
+      '/api/user/claim-free-trial'
+    ]; // API routes that require auth
 
-  // Early allow-list: skip auth for public API routes
-  if (publicApiRoutes.some(route => pathname.startsWith(route))) {
-    return response;
-  }
-
-  // Check if this is a protected API route
-  if (protectedApiRoutes.some(route => pathname.startsWith(route))) {
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Early allow-list: skip auth for public API routes
+    if (publicApiRoutes.some(route => pathname.startsWith(route))) {
+      return response;
     }
-    // Add user info to headers for API routes to use
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-user-id', session.user.id);
-    requestHeaders.set('x-user-email', session.user.email || '');
-    
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  }
 
-  // If trying to access a protected route without a session, redirect to signin
-  if (!session && protectedRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/signin', request.url));
-  }
+    // Check if this is a protected API route
+    if (protectedApiRoutes.some(route => pathname.startsWith(route))) {
+      if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      // Add user info to headers for API routes to use
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set('x-user-id', session.user.id);
+      requestHeaders.set('x-user-email', session.user.email || '');
+      
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+    }
 
-  // If there is a session and the user tries to access an auth route (e.g. /signin), redirect to dashboard
-  if (session && authRoutes.some(route => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
+    // If trying to access a protected route without a session, redirect to signin
+    if (!session && protectedRoutes.some(route => pathname.startsWith(route))) {
+      return NextResponse.redirect(new URL('/signin', request.url));
+    }
 
-  return response;
+    // If there is a session and the user tries to access an auth route (e.g. /signin), redirect to dashboard
+    if (session && authRoutes.some(route => pathname.startsWith(route))) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Middleware error:', error);
+    // Return a basic response to avoid blocking the request
+    return NextResponse.next();
+  }
 }
 
 export const config = {
