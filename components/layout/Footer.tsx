@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { Container } from '@/components/creem/landing/container';
-import { Twitter, Linkedin, Mail } from 'lucide-react'; // MessageSquare is no longer used directly here
+import { Twitter, Linkedin, Mail } from 'lucide-react';
 import { FaDiscord } from 'react-icons/fa';
+import BadgeList from '@/components/ui/BadgeList';
+import { badges } from '@/lib/data/badges';
 import config from '@/config';
 
 const Footer = () => {
@@ -33,7 +35,7 @@ const Footer = () => {
           
           <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
             <p className="text-sm text-muted-foreground">
-              &copy; {currentYear} Banana AI. All rights reserved.
+              &copy; {currentYear} AI Miniature. All rights reserved.
             </p>
             <a 
               href={`mailto:${config.contact_us_email}`}
@@ -59,10 +61,17 @@ const Footer = () => {
           </nav>
         </div>
         
+        <div className="mt-8 pt-8 border-t border-border/40 text-center">
+          <h4 className="mb-4 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+            Featured On
+          </h4>
+          <BadgeList badges={badges} className="justify-center" />
+        </div>
+
         {/* Powered By Section */}
-        <div className="mt-6 pt-4 border-t border-border/40 text-center">
+        <div className="mt-6 pt-4 text-center">
           <p className="text-sm text-muted-foreground/70">
-            This website is powered by Google Gemini 2.5 Flash Preview model
+            This website provides a user-friendly interface for advanced AI models, enhancing usability for image applications. We are an independent service provider.
           </p>
         </div>
       </Container>
